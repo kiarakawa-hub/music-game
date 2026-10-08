@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Game</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #240046;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .card {
+      background: #10002B;
+      border: 3px solid #5A189A;
+      border-radius: 25px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    h1 {
+      font-size: 45px;
+      text-align: center;
+      color: #FFD166;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #C77DFF;
+      margin-bottom: 25px;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #E0D7EA;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border-radius: 12px;
+      border: 2px solid #5A189A;
+      background: #240046;
+      color: white;
+      font-size: 17px;
+      margin-bottom: 15px;
+      outline: none;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 15px 22px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+    }
+
+    .primary {
+      width: 100%;
+      background: #FFB703;
+      color: #10002B;
+    }
+
+    .purple {
+      background: #5A189A;
+      color: white;
+    }
+
+    .players {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .player {
+      background: #240046;
+      border: 2px solid #5A189A;
+      border-radius: 15px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .player.active-player {
+      border-color: #FFD166;
+      box-shadow: 0 0 15px rgba(255,209,102,0.4);
+    }
+
+    .player-name {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .points {
+      color: #FFD166;
+      margin-top: 7px;
+    }
+
+    .turn {
+      text-align: center;
+      background: #5A189A;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 25px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .roulette-area {
+      text-align: center;
+    }
+
+    .roulette {
+      width: 270px;
+      height: 270px;
+      margin: 25px auto;
+      border-radius: 50%;
+      background:
+        conic-gradient(
+          #5A189A 0deg 30deg,
+          #C77DFF 30deg 60deg,
+          #5A189A 60deg 90deg,
+          #C77DFF 90deg 120deg,
+          #5A189A 120deg 150deg,
+          #C77DFF 150deg 180deg,
+          #5A189A 180deg 210deg,
+          #C77DFF 210deg 240deg,
+          #5A189A 240deg 270deg,
+          #C77DFF 270deg 300deg,
+          #5A189A 300deg 330deg,
+          #C77DFF 330deg 360deg
+        );
+      border: 8px solid #FFD166;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 30px rgba(199,125,255,0.4);
+    }
+
+    .roulette-center {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #10002B;
+      border: 4px solid #FFD166;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    .result {
+      margin: 20px 0;
+      min-height: 35px;
+      color: #FFD166;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .actions button {
+      min-width: 180px;
+    }
+
+    .back {
+      margin-top: 20px;
+      background: transparent;
+      color: #C77DFF;
+      border: 1px solid #5A189A;
+    }
+
+    .empty {
+      text-align: center;
+      color: #E0D7EA;
+      padding: 20px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .card {
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      h2 {
+        font-size: 21px;
+      }
+
+      .roulette {
+        width: 220px;
+        height: 220px;
+      }
+
+      .roulette-center {
+        width: 75px;
+        height: 75px;
+        font-size: 24px;
+      }
+
+      .actions button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- TELA INICIAL -->
+  <section id="home" class="screen active">
+    <div class="card">
+
+      <h1>🎵 MUSIC GAME</h1>
+
+      <p class="subtitle">
+        O jogo musical da sua família!
+      </p>
+
+      <input
+        type="text"
+        id="playerName"
+        placeholder="Digite seu nome"
+        maxlength="20"
+      >
+
+      <button class="primary" onclick="enterGame()">
+        🎮 ENTRAR NO JOGO
+      </button>
+
+    </div>
+  </section>
+
+
+  <!-- SALA -->
+  <section id="lobby" class="screen">
+    <div class="card">
+
+      <h2>👥 JOGADORES</h2>
+
+      <div id="playersList" class="players"></div>
+
+      <button class="primary" onclick="startGame()">
+        🎡 COMEÇAR JOGO
+      </button>
+
+      <button class="back" onclick="goHome()">
+        ← Voltar
+      </button>
+
+    </div>
+  </section>
+
+
+  <!-- JOGO -->
+  <section id="game" class="screen">
+
+    <div class="card">
+
+      <h2>🎵 MUSIC GAME</h2>
+
+      <div id="turnDisplay" class="turn"></div>
+
+      <div id="gamePlayers" class="players"></div>
+
+      <div class="roulette-area">
+
+        <div class="roulette">
+          <div id="rouletteNumber" class="roulette-center">
+            ?
+          </div>
+        </div>
+
+        <div id="result" class="result">
+          Gire a roleta!
+        </div>
+
+        <div class="actions">
+
+          <button
+            id="spinButton"
+            class="primary"
+            onclick="spinRoulette()"
+          >
+            🎡 GIRAR ROLETA
+          </button>
+
+          <button
+            class="purple"
+            onclick="nextPlayer()"
+          >
+            ➡️ PRÓXIMO JOGADOR
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<script>
+
+  let players = [];
+  let currentPlayer = 0;
+  let lastNumber = null;
+
+
+  function showScreen(id) {
+
+    document.querySelectorAll(".screen").forEach(screen => {
+      screen.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+  }
+
+
+  function enterGame() {
+
+    const input = document.getElementById("playerName");
+    const name = input.value.trim();
+
+    if (!name) {
+      alert("Digite seu nome primeiro!");
+      return;
+    }
+
+    players.push({
+      name: name,
+      points: 0
+    });
+
+    input.value = "";
+
+    updatePlayers();
+
+    showScreen("lobby");
+  }
+
+
+  function updatePlayers() {
+
+    const list = document.getElementById("playersList");
+
+    list.innerHTML = "";
+
+    if (players.length === 0) {
+
+      list.innerHTML =
+        '<div class="empty">Nenhum jogador ainda.</div>';
+
+      return;
+    }
+
+    players.forEach((player, index) => {
+
+      const div = document.createElement("div");
+
+      div.className = "player";
+
+      div.innerHTML = `
+        <div class="player-name">
+          👤 ${player.name}
+        </div>
+
+        <div class="points">
+          ⭐ ${player.points} pontos
+        </div>
+      `;
+
+      list.appendChild(div);
+
+    });
+  }
+
+
+  function startGame() {
+
+    if (players.length < 1) {
+
+      alert("Adicione pelo menos um jogador!");
+
+      return;
+    }
+
+    updateGamePlayers();
+
+    updateTurn();
+
+    showScreen("game");
+  }
+
+
+  function updateGamePlayers() {
+
+    const list = document.getElementById("gamePlayers");
+
+    list.innerHTML = "";
+
+    players.forEach((player, index) => {
+
+      const div = document.createElement("div");
+
+      div.className =
+        "player " +
+        (index === currentPlayer ? "active-player" : "");
+
+      div.innerHTML = `
+        <div class="player-name">
+          ${index === currentPlayer ? "👑 " : "👤 "}
+          ${player.name}
+        </div>
+
+        <div class="points">
+          ⭐ ${player.points}
+        </div>
+      `;
+
+      list.appendChild(div);
+
+    });
+  }
+
+
+  function updateTurn() {
+
+    const player = players[currentPlayer];
+
+    document.getElementById("turnDisplay").innerHTML =
+      `👑 VEZ DE: ${player.name}`;
+  }
+
+
+  function spinRoulette() {
+
+    const button = document.getElementById("spinButton");
+
+    button.disabled = true;
+
+    const roulette =
+      document.querySelector(".roulette");
+
+    roulette.style.transition =
+      "transform 3s cubic-bezier(.17,.67,.25,1)";
+
+    const rotation =
+      1440 + Math.floor(Math.random() * 1440);
+
+    roulette.style.transform =
+      `rotate(${rotation}deg)`;
+
+    setTimeout(() => {
+
+      const number =
+        Math.floor(Math.random() * 30) + 1;
+
+      lastNumber = number;
+
+      document.getElementById("rouletteNumber")
+        .textContent = number;
+
+      document.getElementById("result")
+        .textContent =
+        `🎵 Música ${number}`;
+
+      button.disabled = false;
+
+    }, 3000);
+  }
+
+
+  function nextPlayer() {
+
+    currentPlayer++;
+
+    if (currentPlayer >= players.length) {
+      currentPlayer = 0;
+    }
+
+    lastNumber = null;
+
+    document.getElementById("rouletteNumber")
+      .textContent = "?";
+
+    document.getElementById("result")
+      .textContent = "Gire a roleta!";
+
+    document.querySelector(".roulette")
+      .style.transform = "rotate(0deg)";
+
+    updateGamePlayers();
+
+    updateTurn();
+  }
+
+
+  function goHome() {
+
+    players = [];
+    currentPlayer = 0;
+
+    showScreen("home");
+  }
+
+</script>
+
+</body>
+        </html>

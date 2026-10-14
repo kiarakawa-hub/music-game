@@ -1,278 +1,342 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Music Game</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desafio Musical</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{min-height:100vh;background:#240046;color:#fff;padding:18px;display:flex;justify-content:center}
-.container{width:100%;max-width:1100px}.screen{display:none}.screen.active{display:block}
-.card{background:#10002B;border:3px solid #5A189A;border-radius:24px;padding:26px;box-shadow:0 10px 30px #0005;margin:8px 0}
-h1{font-size:clamp(30px,5vw,45px);text-align:center;color:#FFD166;margin-bottom:10px}
-h2{text-align:center;color:#C77DFF;margin-bottom:20px}.subtitle{text-align:center;color:#E0D7EA;margin:0 0 25px}
-input,textarea{width:100%;padding:13px;border-radius:12px;border:2px solid #5A189A;background:#240046;color:white;font-size:16px;margin:8px 0}
-button{border:0;border-radius:12px;padding:13px 18px;font-size:16px;font-weight:bold;cursor:pointer;transition:.15s}
-button:hover{filter:brightness(1.1)}button:disabled{opacity:.5;cursor:not-allowed}
-.primary{background:#FFB703;color:#10002B}.purple{background:#5A189A;color:#fff}.soft{background:#C77DFF;color:#10002B}.danger{background:#D62828;color:#fff}.good{background:#2DC653;color:#10002B}.back{background:transparent;color:#C77DFF;border:1px solid #5A189A;margin-top:15px}
-.full{width:100%}.players{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin:18px 0}
-.player{background:#240046;border:2px solid #5A189A;border-radius:14px;padding:14px;text-align:center;overflow-wrap:anywhere}.player.active-player{border-color:#FFD166;box-shadow:0 0 15px #FFD16655}
-.points{color:#FFD166;margin-top:7px}.turn{text-align:center;background:#5A189A;border-radius:14px;padding:14px;margin-bottom:18px;font-size:20px;font-weight:bold}
-.roulette-area{text-align:center}.roulette{width:250px;height:250px;max-width:70vw;max-height:70vw;margin:20px auto;border-radius:50%;background:conic-gradient(#5A189A 0 30deg,#C77DFF 30deg 60deg,#5A189A 60deg 90deg,#C77DFF 90deg 120deg,#5A189A 120deg 150deg,#C77DFF 150deg 180deg,#5A189A 180deg 210deg,#C77DFF 210deg 240deg,#5A189A 240deg 270deg,#C77DFF 270deg 300deg,#5A189A 300deg 330deg,#C77DFF 330deg 360deg);border:8px solid #FFD166;display:flex;align-items:center;justify-content:center;box-shadow:0 0 25px #C77DFF55}
-.roulette-center{width:85px;height:85px;border-radius:50%;background:#10002B;border:4px solid #FFD166;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold}
-.result{margin:15px 0;min-height:30px;color:#FFD166;font-size:22px;font-weight:bold}.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.actions button{flex:1;min-width:145px}
-.song-panel{border:2px solid #5A189A;border-radius:16px;padding:18px;margin-top:22px;background:#240046}.song-panel h3{color:#FFD166;margin-bottom:8px}.hidden{display:none!important}.hint{font-size:14px;color:#E0D7EA;margin:8px 0}.vote-row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.vote-row button{flex:1;min-width:120px}
-.comments{margin-top:16px;border-top:1px solid #5A189A;padding-top:14px}.comment{background:#10002B;border-radius:10px;padding:10px;margin:8px 0;overflow-wrap:anywhere}.status{padding:10px;border-radius:10px;background:#10002B;margin:10px 0;color:#FFD166}
-@media(max-width:600px){body{padding:8px}.card{padding:18px;border-radius:18px}.actions button{width:100%;flex-basis:100%}.vote-row button{width:100%;flex-basis:100%}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#1a1a1a;color:#e0e0e0;min-height:100vh;padding:16px;display:flex;justify-content:center}
+.container{width:100%;max-width:480px;margin:12px auto 30px}
+header{text-align:center;margin-bottom:22px}
+h1{font-size:1.55rem;color:#fff}
+header p,.desc,.small{color:#aaa;line-height:1.45;font-size:.9rem;margin-top:8px}
+.card{background:#2a2a2a;border:1px solid #3a3a3a;border-radius:15px;padding:17px;margin-bottom:14px}
+.title{font-size:1.05rem;font-weight:bold;margin-bottom:9px}
+.desc{margin:0 0 14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:#f5a623;color:#1a1a1a;border:0;border-radius:10px;padding:12px 15px;font-size:.95rem;font-weight:bold;cursor:pointer;text-decoration:none;margin:2px 4px 2px 0}
+.secondary{background:#444;color:#eee}
+.green{background:#287d4c;color:white}
+.red{background:#a83232;color:white}
+input,textarea{width:100%;background:#181818;color:white;border:1px solid #555;border-radius:9px;padding:12px;font-size:1rem;margin:6px 0 12px}
+.hidden{display:none!important}
+.status{background:#21172c;border:1px solid #5A189A;border-radius:10px;padding:12px;margin-bottom:14px;line-height:1.6}
+.reveal{display:none;background:#1f3a2f;border:1px solid #2e5c45;border-radius:12px;padding:15px;margin-top:12px;text-align:center}
+.reveal.show{display:block}
+.song{font-size:1.1rem;font-weight:bold;color:#7dcea0}
+.artist{color:#a8d5b5;margin-top:4px}
+.player,.comment{padding:9px 0;border-bottom:1px solid #444;display:flex;justify-content:space-between;gap:10px;overflow-wrap:anywhere}
+.player strong{color:#fff}
+.tag{color:#f5a623;font-size:.78rem}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1}
+footer{text-align:center;color:#666;font-size:.8rem;margin-top:24px}
 </style>
 </head>
-<body><div class="container">
-<section id="home" class="screen active"><div class="card"><h1>🎵 MUSIC GAME</h1><p class="subtitle">O jogo musical da sua família!</p>
-<label for="playerName">Nome do jogador</label><input id="playerName" maxlength="20" placeholder="Digite seu nome">
-<button class="primary full" onclick="enterGame()">🎮 ADICIONAR JOGADOR</button>
-<div id="homePlayers" class="players"></div><button class="purple full" onclick="startGame()">🎡 COMEÇAR JOGO</button>
-<p class="hint">Esta versão funciona neste navegador/dispositivo. A sala compartilhada entre celulares precisa de um banco de dados online.</p></div></section>
-<section id="game" class="screen"><div class="card"><h2>🎵 MUSIC GAME</h2><div id="turnDisplay" class="turn"></div><div id="gamePlayers" class="players"></div>
-<div class="roulette-area"><div class="roulette" id="roulette"><div id="rouletteNumber" class="roulette-center">?</div></div><div id="result" class="result">Gire a roleta!</div>
-<div class="actions"><button id="spinButton" class="primary" onclick="spinRoulette()">🎡 GIRAR ROLETA</button><button class="purple" onclick="nextPlayer()">➡️ PULAR / PRÓXIMO</button></div></div>
-<div id="songPanel" class="song-panel hidden"><h3 id="songNumber"></h3><p id="songPrompt">Escolha como ouvir a música:</p>
-<div class="actions" style="margin-top:12px"><button class="soft" onclick="openSong('karaoke')">🎤 Instrumental / Karaokê</button><button class="purple" onclick="openSong('original')">🎶 Versão original</button></div>
-<p class="hint">Os botões abrem uma busca no YouTube para escolher o vídeo certo.</p>
-<div id="videoLinkArea" class="status hidden"></div>
-<label for="answerInput">Resposta do jogador (música ou artista)</label><input id="answerInput" placeholder="Digite sua resposta">
-<button class="primary full" onclick="submitAnswer()">📨 ENVIAR RESPOSTA</button>
-<button class="soft full" style="margin-top:8px" onclick="revealAnswer()">🤷 NÃO SEI / REVELAR RESPOSTA</button>
-<div id="answerStatus" class="status hidden"></div>
-<div id="votingArea" class="hidden"><h3 style="margin-top:16px">🗳️ Os outros jogadores votam</h3><div class="vote-row"><button class="good" onclick="castVote(true)">✅ CERTO</button><button class="danger" onclick="castVote(false)">❌ ERRADO</button></div><p class="hint">A maioria dos votos decide. Em empate, a resposta é considerada errada. Com apenas um jogador, use o botão de revelar.</p><div id="voteStatus" class="status"></div>
-<div class="comments"><h3>💬 Comentários</h3><div id="commentsList"></div><input id="commentInput" placeholder="Escreva um comentário"><button class="purple full" onclick="addComment()">Enviar comentário</button></div></div>
-<button id="nextRoundButton" class="primary full hidden" style="margin-top:15px" onclick="nextPlayer()">➡️ PRÓXIMO JOGADOR</button>
-</div></div></section></div>
-<script>
-const songs = [
-  {
-    "id": 1,
-    "title": "Evidências",
-    "artist": "Chitãozinho & Xororó",
-    "originalUrl": "https://www.youtube.com/results?search_query=Evid%C3%AAncias%20Chit%C3%A3ozinho%20e%20Xoror%C3%B3%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Evid%C3%AAncias%20Chit%C3%A3ozinho%20e%20Xoror%C3%B3%20karaok%C3%AA"
-  },
-  {
-    "id": 2,
-    "title": "Sinônimo",
-    "artist": "Traia Véia",
-    "originalUrl": "https://www.youtube.com/results?search_query=Sin%C3%B4nimo%20Traia%20V%C3%A9ia%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Sin%C3%B4nimo%20Traia%20V%C3%A9ia%20karaok%C3%AA"
-  },
-  {
-    "id": 3,
-    "title": "Felicidade",
-    "artist": "Seu Jorge",
-    "originalUrl": "https://www.youtube.com/results?search_query=Felicidade%20Seu%20Jorge%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Felicidade%20Seu%20Jorge%20karaok%C3%AA"
-  },
-  {
-    "id": 4,
-    "title": "Dormi na Praça",
-    "artist": "Bruno & Marrone",
-    "originalUrl": "https://www.youtube.com/results?search_query=Dormi%20na%20Pra%C3%A7a%20Bruno%20e%20Marrone%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Dormi%20na%20Pra%C3%A7a%20Bruno%20e%20Marrone%20karaok%C3%AA"
-  },
-  {
-    "id": 5,
-    "title": "Eu Só Quero um Xodó",
-    "artist": "Elba Ramalho",
-    "originalUrl": "https://www.youtube.com/results?search_query=Eu%20S%C3%B3%20Quero%20um%20Xod%C3%B3%20Elba%20Ramalho%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Eu%20S%C3%B3%20Quero%20um%20Xod%C3%B3%20Elba%20Ramalho%20karaok%C3%AA"
-  },
-  {
-    "id": 6,
-    "title": "Bang",
-    "artist": "Anitta",
-    "originalUrl": "https://www.youtube.com/results?search_query=Bang%20Anitta%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Bang%20Anitta%20karaok%C3%AA"
-  },
-  {
-    "id": 7,
-    "title": "Terremoto",
-    "artist": "Anitta & Kevinho",
-    "originalUrl": "https://www.youtube.com/results?search_query=Terremoto%20Anitta%20Kevinho%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Terremoto%20Anitta%20Kevinho%20karaok%C3%AA"
-  },
-  {
-    "id": 8,
-    "title": "Pé na Areia",
-    "artist": "Diogo Nogueira",
-    "originalUrl": "https://www.youtube.com/results?search_query=P%C3%A9%20na%20Areia%20Diogo%20Nogueira%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=P%C3%A9%20na%20Areia%20Diogo%20Nogueira%20karaok%C3%AA"
-  },
-  {
-    "id": 9,
-    "title": "Sequência Feiticeira",
-    "artist": "Pedro Sampaio e participações",
-    "originalUrl": "https://www.youtube.com/results?search_query=Sequ%C3%AAncia%20Feiticeira%20Pedro%20Sampaio%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Sequ%C3%AAncia%20Feiticeira%20Pedro%20Sampaio%20karaok%C3%AA"
-  },
-  {
-    "id": 10,
-    "title": "Barulho do Foguete",
-    "artist": "Zé Neto & Cristiano",
-    "originalUrl": "https://www.youtube.com/results?search_query=Barulho%20do%20Foguete%20Z%C3%A9%20Neto%20Cristiano%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Barulho%20do%20Foguete%20Z%C3%A9%20Neto%20Cristiano%20karaok%C3%AA"
-  },
-  {
-    "id": 11,
-    "title": "Melzinho",
-    "artist": "Xand Avião & Talita Mel",
-    "originalUrl": "https://www.youtube.com/results?search_query=Melzinho%20Xand%20Avi%C3%A3o%20Talita%20Mel%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Melzinho%20Xand%20Avi%C3%A3o%20Talita%20Mel%20karaok%C3%AA"
-  },
-  {
-    "id": 12,
-    "title": "Leilão",
-    "artist": "Gloria Groove",
-    "originalUrl": "https://www.youtube.com/results?search_query=Leil%C3%A3o%20Gloria%20Groove%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Leil%C3%A3o%20Gloria%20Groove%20karaok%C3%AA"
-  },
-  {
-    "id": 13,
-    "title": "A Queda",
-    "artist": "Gloria Groove",
-    "originalUrl": "https://www.youtube.com/results?search_query=A%20Queda%20Gloria%20Groove%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=A%20Queda%20Gloria%20Groove%20karaok%C3%AA"
-  },
-  {
-    "id": 14,
-    "title": "Presepada",
-    "artist": "Maiara e Maraisa & Marília Mendonça",
-    "originalUrl": "https://www.youtube.com/watch?v=MQv__TADEGM",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Presepada%20Maiara%20Maraisa%20Mar%C3%ADlia%20Mendon%C3%A7a%20karaok%C3%AA"
-  },
-  {
-    "id": 15,
-    "title": "Flor e o Beija-Flor",
-    "artist": "Henrique e Juliano feat. Marília Mendonça",
-    "originalUrl": "https://www.youtube.com/watch?v=LmRrLl8aLfE",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Flor%20e%20o%20Beija-Flor%20Henrique%20Juliano%20Mar%C3%ADlia%20Mendon%C3%A7a%20karaok%C3%AA"
-  },
-  {
-    "id": 16,
-    "title": "O Descobridor dos Sete Mares",
-    "artist": "Tim Maia",
-    "originalUrl": "https://www.youtube.com/watch?v=PAUlCK8kuGU",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=O%20Descobridor%20dos%20Sete%20Mares%20Tim%20Maia%20karaok%C3%AA"
-  },
-  {
-    "id": 17,
-    "title": "Burguesinha",
-    "artist": "Seu Jorge",
-    "originalUrl": "https://www.youtube.com/watch?v=bWSn9jL1g7I",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Burguesinha%20Seu%20Jorge%20karaok%C3%AA"
-  },
-  {
-    "id": 18,
-    "title": "Primeiros Erros",
-    "artist": "Capital Inicial",
-    "originalUrl": "https://www.youtube.com/results?search_query=Primeiros%20Erros%20Capital%20Inicial%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Primeiros%20Erros%20Capital%20Inicial%20karaok%C3%AA"
-  },
-  {
-    "id": 19,
-    "title": "Tempos Modernos",
-    "artist": "Lulu Santos",
-    "originalUrl": "https://www.youtube.com/results?search_query=Tempos%20Modernos%20Lulu%20Santos%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Tempos%20Modernos%20Lulu%20Santos%20karaok%C3%AA"
-  },
-  {
-    "id": 20,
-    "title": "Dynamite",
-    "artist": "BTS",
-    "originalUrl": "https://www.youtube.com/results?search_query=Dynamite%20BTS%20official%20music%20video",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Dynamite%20BTS%20karaoke%20instrumental"
-  },
-  {
-    "id": 21,
-    "title": "Seven",
-    "artist": "Jung Kook",
-    "originalUrl": "https://www.youtube.com/results?search_query=Seven%20Jung%20Kook%20official%20music%20video",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Seven%20Jung%20Kook%20karaoke%20instrumental"
-  },
-  {
-    "id": 22,
-    "title": "Nosso Primeiro Beijo",
-    "artist": "Gloria Groove",
-    "originalUrl": "https://www.youtube.com/results?search_query=Nosso%20Primeiro%20Beijo%20Gloria%20Groove%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Nosso%20Primeiro%20Beijo%20Gloria%20Groove%20karaok%C3%AA"
-  },
-  {
-    "id": 23,
-    "title": "Cheguei",
-    "artist": "Ludmilla",
-    "originalUrl": "https://www.youtube.com/results?search_query=Cheguei%20Ludmilla%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Cheguei%20Ludmilla%20karaok%C3%AA"
-  },
-  {
-    "id": 24,
-    "title": "Todo Mundo Menos Você",
-    "artist": "Marília Mendonça & Maiara e Maraisa",
-    "originalUrl": "https://www.youtube.com/results?search_query=Todo%20Mundo%20Menos%20Voc%C3%AA%20Mar%C3%ADlia%20Mendon%C3%A7a%20Maiara%20Maraisa%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Todo%20Mundo%20Menos%20Voc%C3%AA%20karaok%C3%AA"
-  },
-  {
-    "id": 25,
-    "title": "Ciclo Sem Fim",
-    "artist": "Trilha sonora de O Rei Leão",
-    "originalUrl": "https://www.youtube.com/results?search_query=Ciclo%20Sem%20Fim%20Rei%20Le%C3%A3o%20portugu%C3%AAs%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Ciclo%20Sem%20Fim%20karaok%C3%AA%20portugu%C3%AAs"
-  },
-  {
-    "id": 26,
-    "title": "Nunca Teve um Amigo Assim",
-    "artist": "Trilha sonora de Aladdin",
-    "originalUrl": "https://www.youtube.com/results?search_query=Nunca%20Teve%20um%20Amigo%20Assim%20Aladdin%20portugu%C3%AAs",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Nunca%20Teve%20um%20Amigo%20Assim%20karaok%C3%AA"
-  },
-  {
-    "id": 27,
-    "title": "He-Man",
-    "artist": "Tema de He-Man",
-    "originalUrl": "https://www.youtube.com/results?search_query=He-Man%20abertura%20brasileira%20tema",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=He-Man%20tema%20karaok%C3%AA"
-  },
-  {
-    "id": 28,
-    "title": "Só Vai",
-    "artist": "Lara Suleiman",
-    "originalUrl": "https://www.youtube.com/results?search_query=S%C3%B3%20Vai%20Lara%20Suleiman%20oficial",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=S%C3%B3%20Vai%20Lara%20Suleiman%20karaok%C3%AA"
-  },
-  {
-    "id": 29,
-    "title": "Sorriso Resplandecente",
-    "artist": "Abertura de Dragon Ball GT",
-    "originalUrl": "https://www.youtube.com/results?search_query=Sorriso%20Resplandecente%20Dragon%20Ball%20GT%20portugu%C3%AAs",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=Sorriso%20Resplandecente%20karaok%C3%AA"
-  },
-  {
-    "id": 30,
-    "title": "LETAL",
-    "artist": "HUNTR/X",
-    "originalUrl": "https://www.youtube.com/results?search_query=HUNTR/X%20LETAL%20m%C3%BAsica",
-    "karaokeUrl": "https://www.youtube.com/results?search_query=HUNTR/X%20LETAL%20karaoke%20instrumental"
-  }
+<body>
+<div class="container">
+<header>
+<h1>🎵 DESAFIO MUSICAL</h1>
+<p>Entre pelo seu celular e use o mesmo código de sala que seus amigos.</p>
+</header>
+
+<div class="card" id="join-card">
+<div class="title">👥 Entrar em uma sala</div>
+<p class="desc">Escolham um código e todos digitem o mesmo.</p>
+<label class="small" for="player-name">Seu nome</label>
+<input id="player-name" maxlength="24" placeholder="Ex.: Sarah">
+<label class="small" for="room-code">Código da sala</label>
+<input id="room-code" maxlength="12" placeholder="Ex.: FAMILIA26">
+<button id="join-btn" class="btn">Entrar no jogo</button>
+</div>
+
+<div id="game" class="hidden">
+<div class="status">
+🏠 Sala: <b id="room-label"></b><br>
+🎯 Rodada: <b id="round-label">1</b><br>
+🎤 Vez de: <b id="turn-label">—</b>
+<div id="connection-status" class="small">Conectando...</div>
+</div>
+
+<div class="card">
+<div class="title">🏆 Jogadores e pontos</div>
+<div id="players-list"></div>
+</div>
+
+<div class="card">
+<div class="title">🎵 OPÇÃO 1 – QUEM CANTA?</div>
+<p class="desc">Ouça o instrumental e tente descobrir quem canta.</p>
+<a id="btn-instrumental" class="btn" target="_blank" rel="noopener">▶ Ouvir instrumental</a>
+</div>
+
+<div class="card">
+<div class="title">🎤 OPÇÃO 2 – QUAL É A MÚSICA?</div>
+<p class="desc">Ouça a música com a voz e tente descobrir o nome.</p>
+<a id="btn-completa" class="btn" target="_blank" rel="noopener">▶ Ouvir música</a>
+</div>
+
+<div class="card">
+<div class="title">🎬 OPÇÃO 3 – MOSTRAR A MÚSICA</div>
+<p class="desc">A resposta será mostrada para todos na sala.</p>
+<button id="btn-revelar" class="btn secondary">Mostrar a música</button>
+<div id="reveal" class="reveal">
+<div class="song" id="reveal-name"></div>
+<div class="artist" id="reveal-artist"></div>
+</div>
+</div>
+
+<div class="card">
+<div class="title">🗳️ Votação</div>
+<p class="desc">Cada pessoa vota uma vez por rodada. A maioria decide; empate não dá ponto.</p>
+<div class="row">
+<button id="vote-correct" class="btn green">✅ Certo</button>
+<button id="vote-wrong" class="btn red">❌ Errado</button>
+</div>
+<p id="votes-summary" class="small">Ainda sem votos.</p>
+</div>
+
+<div class="card">
+<div class="title">💬 Comentários</div>
+<textarea id="comment-input" rows="2" maxlength="240" placeholder="Escreva um comentário..."></textarea>
+<button id="send-comment" class="btn secondary">Enviar comentário</button>
+<div id="comments-list"></div>
+</div>
+
+<div class="card">
+<div class="title">⏭️ Próxima rodada</div>
+<p class="desc">Sorteia outra música e passa a vez ao próximo jogador.</p>
+<button id="btn-next" class="btn">Próxima música e jogador</button>
+</div>
+
+<button id="leave-btn" class="btn secondary">Sair da sala neste aparelho</button>
+</div>
+<footer>Desafio Musical • Firebase</footer>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getDatabase, ref, get, set, update, onValue, push } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBu2ZU6i80AXqVvDHIx65BH0orY8gu_wBs",
+  authDomain: "music-game-8b752.firebaseapp.com",
+  databaseURL: "https://music-game-8b752-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "music-game-8b752",
+  storageBucket: "music-game-8b752.firebasestorage.app",
+  messagingSenderId: "663909367921",
+  appId: "1:663909367921:web:ea9e3670e63dfd64c01bd0"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+const musicas = [
+{nome:"Evidências",artista:"Chitãozinho & Xororó",instrumental:"https://www.youtube.com/watch?v=TGXkdU9S0OU",completa:"https://www.youtube.com/watch?v=ePjtnSPFWK8"},
+{nome:"Sinônimos",artista:"Traia Véia",instrumental:"https://www.youtube.com/watch?v=dlAflqd3EMk",completa:"https://www.youtube.com/watch?v=UjRlx2_K1vw"},
+{nome:"Menina Veneno",artista:"Ritchie",instrumental:"https://www.youtube.com/watch?v=ojzDJ1amfj4",completa:"https://www.youtube.com/watch?v=0m38EM0QumI"},
+{nome:"Admirável Chip Novo",artista:"Pitty",instrumental:"https://www.youtube.com/watch?v=DvgTTU8H9O8",completa:"https://www.youtube.com/watch?v=aXJ_Ub1xbhw"},
+{nome:"Mina do Condomínio",artista:"Seu Jorge",instrumental:"https://www.youtube.com/watch?v=WoLkiuX781I",completa:"https://www.youtube.com/watch?v=2GsBx_SmjOI"},
+{nome:"O Descobridor dos Sete Mares",artista:"Diogo Nogueira / Tim Maia",instrumental:"https://www.youtube.com/watch?v=MRa-yG-_R4g",completa:"https://www.youtube.com/watch?v=SqN8jsncD4M"},
+{nome:"Gatinha Assanhada",artista:"Gusttavo Lima",instrumental:"https://www.youtube.com/watch?v=lkr4lk6YJmY",completa:"https://www.youtube.com/watch?v=N1EwYpfUFQU"},
+{nome:"Vou Festejar",artista:"Beth Carvalho",instrumental:"https://www.youtube.com/watch?v=-FiJyucZg3g",completa:"https://www.youtube.com/watch?v=JbhXehcpCPI"},
+{nome:"Felicidade",artista:"Seu Jorge",instrumental:"https://www.youtube.com/watch?v=JlyW_SafGPE",completa:"https://www.youtube.com/watch?v=XQJOQcpsrTw"}
 ];
 
-let players=[],currentPlayer=0,lastNumber=null,roundResolved=false,votes=[],roundComments=[],submittedAnswer="";
-function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active")}
-function enterGame(){let input=document.getElementById("playerName"),name=input.value.trim();if(!name){alert("Digite seu nome primeiro!");return}if(players.some(p=>p.name.toLowerCase()===name.toLowerCase())){alert("Esse nome já foi adicionado.");return}players.push({name,points:0});input.value="";renderPlayers();input.focus()}
-function renderPlayers(){let home=document.getElementById("homePlayers"),game=document.getElementById("gamePlayers");home.innerHTML="";game.innerHTML="";players.forEach((p,i)=>{let a=document.createElement("div");a.className="player";a.textContent="👤 "+p.name+" ⭐ "+p.points;home.appendChild(a);let b=document.createElement("div");b.className="player "+(i===currentPlayer?"active-player":"");b.innerHTML=`<div class="player-name">${i===currentPlayer?"👑 ":"👤 "}${escapeHtml(p.name)}</div><div class="points">⭐ ${p.points} ponto(s)</div>`;game.appendChild(b)})}
-function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function startGame(){if(players.length<1){alert("Adicione pelo menos um jogador!");return}currentPlayer=0;renderPlayers();updateTurn();showScreen("game")}
-function updateTurn(){document.getElementById("turnDisplay").textContent="👑 VEZ DE: "+players[currentPlayer].name}
-function spinRoulette(){if(roundResolved||lastNumber!==null)return;let button=document.getElementById("spinButton");button.disabled=true;let roulette=document.getElementById("roulette");roulette.style.transition="transform 3s cubic-bezier(.17,.67,.25,1)";roulette.style.transform=`rotate(${1440+Math.floor(Math.random()*1440)}deg)`;setTimeout(()=>{lastNumber=Math.floor(Math.random()*songs.length)+1;let song=songs[lastNumber-1];document.getElementById("rouletteNumber").textContent=lastNumber;document.getElementById("result").textContent="🎵 Música "+lastNumber;document.getElementById("songNumber").textContent="MÚSICA "+lastNumber+" DE "+songs.length;document.getElementById("songPanel").classList.remove("hidden");document.getElementById("answerInput").value="";document.getElementById("answerStatus").classList.add("hidden");document.getElementById("videoLinkArea").classList.add("hidden");document.getElementById("votingArea").classList.add("hidden");document.getElementById("nextRoundButton").classList.add("hidden");document.getElementById("spinButton").disabled=true;button.disabled=false;},3000)}
-function openSong(type){if(lastNumber===null)return;let s=songs[lastNumber-1],url=type==="karaoke"?s.karaokeUrl:s.originalUrl;let area=document.getElementById("videoLinkArea");area.classList.remove("hidden");area.innerHTML=`<strong>${type==="karaoke"?"🎤 Busca de karaokê":"🎶 Busca da versão original"}:</strong><br><a style="color:#FFD166" href="${url}" target="_blank" rel="noopener">Abrir no YouTube: ${escapeHtml(s.title)}</a><br><span class="hint">Confira se selecionou a gravação correta.</span>`;window.open(url,"_blank","noopener")}
-function submitAnswer(){if(lastNumber===null||roundResolved)return;let ans=document.getElementById("answerInput").value.trim();if(!ans){alert("Digite uma resposta primeiro.");return}submittedAnswer=ans;votes=[];roundComments=[];document.getElementById("answerStatus").classList.remove("hidden");document.getElementById("answerStatus").textContent=players[currentPlayer].name+" respondeu: “"+ans+"”";document.getElementById("votingArea").classList.remove("hidden");document.getElementById("voteStatus").textContent="Votos: 0 de "+Math.max(0,players.length-1);document.getElementById("commentsList").innerHTML="";document.getElementById("commentInput").value="";document.getElementById("nextRoundButton").classList.add("hidden");if(players.length===1){document.getElementById("voteStatus").textContent="Só há um jogador. Revele a resposta para encerrar a rodada.";}}
-function castVote(correct){if(roundResolved||lastNumber===null||!submittedAnswer){alert("Envie uma resposta antes de votar.");return}let voter=prompt("Quem está votando? Digite o nome:");if(!voter)return;voter=voter.trim();if(voter.toLowerCase()===players[currentPlayer].name.toLowerCase()){alert("O jogador da vez não pode votar na própria resposta.");return}if(!players.some(p=>p.name.toLowerCase()===voter.toLowerCase())){alert("Esse nome não está na lista de jogadores.");return}if(votes.some(v=>v.name.toLowerCase()===voter.toLowerCase())){alert("Esse jogador já votou.");return}votes.push({name:voter,correct});let yes=votes.filter(v=>v.correct).length,no=votes.length-yes;document.getElementById("voteStatus").textContent=`Votos: ${yes} CERTO · ${no} ERRADO. ${votes.length} de ${players.length-1} votos.`;if(votes.length>=players.length-1)resolveRound(yes>no)}
-function resolveRound(correct){if(roundResolved)return;roundResolved=true;let s=songs[lastNumber-1];let status=document.getElementById("answerStatus");status.classList.remove("hidden");if(correct){players[currentPlayer].points++;status.textContent="🎉 Resposta considerada CERTA! +1 ponto para "+players[currentPlayer].name+"."}else{status.textContent=`❌ Resposta considerada ERRADA. Resposta: “${s.title}” — ${s.artist}. 0 pontos.`}document.getElementById("voteStatus").textContent+=` | Resultado final: ${correct?"CERTO":"ERRADO"}. Resposta: ${s.title} — ${s.artist}.`;document.getElementById("nextRoundButton").classList.remove("hidden");renderPlayers()}
-function revealAnswer(){if(lastNumber===null||roundResolved)return;let s=songs[lastNumber-1];roundResolved=true;document.getElementById("answerStatus").classList.remove("hidden");document.getElementById("answerStatus").textContent=`Resposta revelada: ${s.title} — ${s.artist}. Você não ganha ponto nesta rodada.`;document.getElementById("votingArea").classList.add("hidden");document.getElementById("nextRoundButton").classList.remove("hidden")}
-function addComment(){if(!document.getElementById("votingArea").classList.contains("hidden")===false)return;let input=document.getElementById("commentInput"),txt=input.value.trim();if(!txt)return;let div=document.createElement("div");div.className="comment";div.textContent=txt;document.getElementById("commentsList").appendChild(div);input.value=""}
-function nextPlayer(){if(lastNumber===null){alert("Gire a roleta primeiro.");return}currentPlayer=(currentPlayer+1)%players.length;lastNumber=null;roundResolved=false;votes=[];roundComments=[];submittedAnswer="";document.getElementById("rouletteNumber").textContent="?";document.getElementById("result").textContent="Gire a roleta!";document.getElementById("roulette").style.transition="none";document.getElementById("roulette").style.transform="rotate(0deg)";document.getElementById("songPanel").classList.add("hidden");document.getElementById("spinButton").disabled=false;renderPlayers();updateTurn()}
-</script></body></html>
+const $ = id => document.getElementById(id);
+let uid = null, roomCode = null, roomRef = null, roomData = null, stopListener = null, myName = "";
+
+function err(message) { alert(message); }
+function song() { return musicas[Number(roomData?.currentIndex || 0)] || musicas[0]; }
+
+async function joinRoom() {
+  const name = $("player-name").value.trim();
+  const code = $("room-code").value.trim().toUpperCase().replace(/[^A-Z0-9_-]/g,"").slice(0,12);
+  if (!name) return err("Digite seu nome.");
+  if (code.length < 3) return err("Use um código com pelo menos 3 caracteres.");
+  $("join-btn").disabled = true;
+
+  try {
+    const credential = await signInAnonymously(auth);
+    uid = credential.user.uid;
+    myName = name;
+    roomCode = code;
+    roomRef = ref(db, "rooms/" + code);
+
+    let snap = await get(roomRef);
+    if (!snap.exists()) {
+      await set(roomRef, {
+        currentIndex: Math.floor(Math.random() * musicas.length),
+        revealed: false,
+        round: 1,
+        currentPlayerUid: uid,
+        players: {},
+        votes: {},
+        comments: {},
+        scored: false
+      });
+    }
+
+    const playerRef = ref(db, `rooms/${code}/players/${uid}`);
+    const playerSnap = await get(playerRef);
+    await update(playerRef, {
+      name,
+      joinedAt: playerSnap.val()?.joinedAt || Date.now(),
+      ...(playerSnap.exists() ? {} : {score:0})
+    });
+
+    snap = await get(roomRef);
+    if (!snap.val()?.currentPlayerUid) await update(roomRef,{currentPlayerUid:uid});
+
+    $("join-card").classList.add("hidden");
+    $("game").classList.remove("hidden");
+    $("room-label").textContent = code;
+
+    if (stopListener) stopListener();
+    stopListener = onValue(roomRef, snapshot => {
+      roomData = snapshot.val() || {};
+      render();
+      $("connection-status").textContent = "🟢 Conectado — alterações sincronizadas";
+    }, error => {
+      $("connection-status").textContent = "🔴 " + error.message;
+    });
+  } catch (error) {
+    console.error(error);
+    err("Falha ao conectar: " + error.message + ". Confira o login anônimo e as regras do Realtime Database.");
+  } finally {
+    $("join-btn").disabled = false;
+  }
+}
+
+function render() {
+  if (!roomData) return;
+  const m = song(), players = roomData.players || {};
+  $("round-label").textContent = roomData.round || 1;
+  $("turn-label").textContent = players[roomData.currentPlayerUid]?.name || "Aguardando jogador";
+  $("btn-instrumental").href = m.instrumental;
+  $("btn-completa").href = m.completa;
+  $("reveal").classList.toggle("show", !!roomData.revealed);
+  $("reveal-name").textContent = roomData.revealed ? m.nome : "";
+  $("reveal-artist").textContent = roomData.revealed ? m.artista : "";
+  $("btn-revelar").disabled = !!roomData.revealed;
+  $("btn-revelar").textContent = roomData.revealed ? "Resposta revelada para todos" : "Mostrar a música";
+
+  const list = $("players-list");
+  list.replaceChildren();
+  Object.entries(players).forEach(([id, p]) => {
+    const row = document.createElement("div");
+    row.className = "player";
+    const n = document.createElement("span");
+    n.textContent = (p.name || "Jogador") + (id === roomData.currentPlayerUid ? " • É a vez" : "");
+    const pts = document.createElement("strong");
+    pts.textContent = (p.score || 0) + " pts";
+    row.append(n, pts);
+    list.append(row);
+  });
+
+  const votes = roomData.votes || {};
+  let c = 0, w = 0;
+  Object.values(votes).forEach(v => v === "correct" ? c++ : v === "wrong" ? w++ : 0);
+  $("votes-summary").textContent = `✅ Certo: ${c} • ❌ Errado: ${w} • Total: ${c+w}`;
+  $("vote-correct").disabled = !!votes[uid];
+  $("vote-wrong").disabled = !!votes[uid];
+
+  const commentsList = $("comments-list");
+  commentsList.replaceChildren();
+  Object.values(roomData.comments || {}).slice(-20).forEach(cmt => {
+    const d = document.createElement("div");
+    d.className = "comment";
+    const b = document.createElement("b");
+    b.textContent = (cmt.name || "Jogador") + ": ";
+    const t = document.createElement("span");
+    t.textContent = cmt.text || "";
+    d.append(b,t);
+    commentsList.append(d);
+  });
+}
+
+async function vote(value) {
+  if (!roomRef || !uid || roomData?.votes?.[uid]) return err("Você já votou nesta rodada.");
+  try {
+    await set(ref(db, `rooms/${roomCode}/votes/${uid}`), value);
+    await scoreIfReady({...roomData.votes,[uid]:value},roomData);
+  } catch (error) {
+    err("Erro no voto: " + error.message);
+  }
+}
+
+async function scoreIfReady(votes,state) {
+  const vals = Object.values(votes || {});
+  const c = vals.filter(v => v === "correct").length;
+  const w = vals.filter(v => v === "wrong").length;
+  if (!state.revealed || vals.length < 2 || c === w || state.scored) return;
+  const turn = state.currentPlayerUid;
+  if (c > w && turn && state.players?.[turn]) {
+    await update(ref(db, `rooms/${roomCode}/players/${turn}`), {
+      score: Number(state.players[turn].score || 0) + 1
+    });
+  }
+  await update(roomRef,{scored:true});
+}
+
+async function reveal() {
+  if (!roomRef || !roomData) return;
+  await update(roomRef,{revealed:true});
+  await scoreIfReady(roomData.votes || {},{...roomData,revealed:true});
+}
+
+async function next() {
+  if (!roomRef || !roomData) return;
+  const ids = Object.keys(roomData.players || {});
+  if (!ids.length) return;
+  const pos = ids.indexOf(roomData.currentPlayerUid);
+  const nextUid = ids[(pos + 1 + ids.length) % ids.length];
+  let ix = Math.floor(Math.random() * musicas.length);
+  while (musicas.length > 1 && ix === Number(roomData.currentIndex)) {
+    ix = Math.floor(Math.random() * musicas.length);
+  }
+  await update(roomRef,{
+    currentIndex:ix,
+    currentPlayerUid:nextUid,
+    round:Number(roomData.round || 1) + 1,
+    revealed:false,
+    votes:null,
+    comments:null,
+    scored:false
+  });
+}
+
+async function comment() {
+  const text = $("comment-input").value.trim();
+  if (!text || !roomCode) return;
+  try {
+    await set(push(ref(db,`rooms/${roomCode}/comments`)),{
+      name:myName,
+      text,
+      createdAt:Date.now()
+    });
+    $("comment-input").value = "";
+  } catch (error) {
+    err("Erro ao enviar comentário: " + error.message);
+  }
+}
+
+$("join-btn").addEventListener("click",joinRoom);
+$("room-code").addEventListener("keydown",e=>{if(e.key==="Enter")joinRoom()});
+$("player-name").addEventListener("keydown",e=>{if(e.key==="Enter")joinRoom()});
+$("btn-revelar").addEventListener("click",reveal);
+$("vote-correct").addEventListener("click",()=>vote("correct"));
+$("vote-wrong").addEventListener("click",()=>vote("wrong"));
+$("btn-next").addEventListener("click",next);
+$("send-comment").addEventListener("click",comment);
+$("leave-btn").addEventListener("click",()=>{
+  if(stopListener)stopListener();
+  roomRef=null;roomCode=null;roomData=null;uid=null;myName="";
+  $("game").classList.add("hidden");
+  $("join-card").classList.remove("hidden");
+});
+</script>
+</body>
+</html>
